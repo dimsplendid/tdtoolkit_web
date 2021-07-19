@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<head>
+    <title>
+        TD toolkit
+    </title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1> Search Box </h1>
+    <form action="query">
+        <!-- <p> Select REF LC </p>
+        <select name="LC_ref">
+            <option value="LCT-15-1098">LCT-15-1098</option>
+            <option selected="selected" value="LCT-19-580">LCT-19-580</option>
+            <option value="Something else...">To do...</option>
+        </select> -->
+        <p> DEMO: save the select LC cell gap </p>
+        <select name="LC" multiple size="3" value="MOX-1">
+            <option value="LCT-19-580">LCT-19-580</option>
+            <option selected="selected" value="MOX-1">MOX-1</option>
+            <option value="Something else...">or more...</option>
+        </select>
+        <br>
+        <h3>More features to be implementation...</h3>
+        <!-- <p> Type in cell gap </p> -->
+        <label for="cell gap">cell gap(um):</label>
+        <input type="number" step="0.01" name="cell_gap" value="3.0">um 每隻獨立設定<br>
+        <label for="V_max">V Upper:</label>
+        <input type="number" step="0.01" name="V_max" value="7.0"> V<br>
+        <label for="V_min">V Lower:</label>
+        <input type="number" step="0.01" name="V_min" value="0.2"> V<br>
+        <input type="submit" value="Submit" id="send">
+    </form>
+    <h3>
+        ploting and export raw data
+    </h3>
+    <form action="/plot/VT">
+        <input type="submit" value="VT curve">複數液晶比較(同一張圖)
+    </form>
+    <form action="/plot/RT-cellgap">
+        <input type="submit" value="RT-cellgap">
+        <ol>
+            <li>y-RT x-cell gap</li>
+            <li> 0.1 um 光學變化</li>
+        </ol>
+    </form>
+    <p>
+        raw data: a package zip file
+    </p>
+    <p>
+        fitting model and save
+    </p>
+    <form action="api/load"> 
+        <input type="file" name="directory">
+        <input type="submit" value="Submit">
+    </form>
+    <h2>Test box</h2>
+    <p name="test_content">
+        test content.
+    </p>
+    <p>
+        To do...
+    </p><h2>query result</h2>
+    <p>
+        in this demo version, all result would save to ./output.
+    </p>
+    <p>
+        To do...
+    </p>
+</body>
