@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<head>
+    <title>
+        TD toolkit
+    </title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>Submit Data Sheets </h1>
+    <h2>廠商委測 VHR</h2>
+    <form action="VHR">
+        <table>
+            <tr>
+                <td>LC</td>
+                <td>
+                    <input type="text" list="LCs" name="LC">
+                    <datalist id="LCs">
+                        <option>LCT-15-1098</option>
+                        <option>LCT-19-580</option>
+                        <option>SLC19V33L00</option>
+                    </datalist>
+                </td>
+            </tr>
+            <tr>
+                <td>LC batch</td>
+                <td>
+                    <input type="text" name="LC_batch">
+                </td>
+            </tr>
+            <tr>
+                <td>Seal</td>
+                <td>
+                    <input type="text" list="seals" name="seal">
+                    <datalist id="seals">
+                        <option>723K1M</option>
+                        <option>7142T</option>
+                    </datalist>
+                </td>
+            </tr>
+            <tr>
+                <td>test cell type</td>
+                <td>
+                    <input type="text" list="test_cell_types" name="test_cell_type">
+                    <datalist id="test_cell_types">
+                        <option>TN</option>
+                    </datalist>
+                </td>    
+            </tr>
+            <tr>
+                <td>
+                    Seal Condtion
+                </td>
+                <td>
+                    <input type="text" list="seal_conds" name="seal_cond">
+                    <datalist id="seal_conds">
+                        <option>Blank Test</option>
+                        <option>Heating Test</option>
+                        <option>UV + Heating Test</option>
+                    </datalist>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Temp(°C)
+                </td>
+                <td>
+                    <input type="text" list="temps" name="temp">
+                    <datalist id="temps">
+                        <option>25</option>
+                        <option>60</option>
+                    </datalist>        
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Voltage(V)
+                </td>
+                <td>
+                    <input type="text" list="voltages" name="voltage" value="1">
+                    <datalist id="voltages">
+                        <option>1</option>
+                    </datalist>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Frequency(Hz)
+                </td>
+                <td>
+                    <input type="text" list="freqs" name="freq">
+                    <datalist id="freqs">
+                        <option>0.6</option>
+                        <option>6</option>
+                        <option>60</option>
+                    </datalist>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    UV dosage(mJ/cm<sup>2</sup>)
+                </td>
+                <td>
+                    <input type="text" list="uv_dosages" name="uv_dosage">
+                    <datalist id="uv_dosages">
+                        <option>0</option>
+                        <option>9000</option>
+                    </datalist>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    report
+                </td>
+                <td>
+                    <input type="text" name="report">
+                </td>
+            </tr>
+        </table>
+        <input type="submit" value="Submit">
+    </form>
+
+</body>
