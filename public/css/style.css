@@ -15,3 +15,17 @@ p {
 input[type='number']{
     width: 40px;
 } 
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+table {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    text-align: center;
+    padding: 0%;
+}
