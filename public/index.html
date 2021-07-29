@@ -4,7 +4,7 @@
         TD toolkit
     </title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
@@ -30,9 +30,54 @@
         ploting and export raw data
     </h2>
     <h3>
-        V-T Curve
+        Total table
     </h4>
-    <form action="/plot/VT">
+    <form action="query/total_table">
+        <table>
+            <thead>
+                <tr>
+                    <th>LC</th>
+                    <th>cell gap(um)</br> upper</th>
+                    <th>cell gap(um)</br> lower</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <input type="text" list="LCs" name=LC>
+                        <datalist id="LCs">
+                            <option>LCT-19-580</option>
+                            <option>MOX-1</option>
+                        </datalist>
+                    </td>
+                    <td>
+                        <input type="number" step="0.1" name="cell_gap_upper" value="3.0">
+                    </td>
+                    <td>
+                        <input type="number" step="0.1" name="cell_gap_lower" value="3.0">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="text" list="LCs" name=LC>
+                        <datalist id="LCs">
+                            <option>LCT-19-580</option>
+                            <option>MOX-1</option>
+                        </datalist>
+                    </td>
+                    <td>
+                        <input type="number" step="0.1" name="cell_gap_upper" value="3.0">
+                    </td>
+                    <td>
+                        <input type="number" step="0.1" name="cell_gap_lower" value="3.0">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <input type="button" 
+        <input type="submit" value="Summon the table">
+    </form>
+    <!-- <form action="/plot/VT">
         <table>
             <thead>
                 <tr>
@@ -82,7 +127,17 @@
             </tbody>
         </table>
         <input type="submit" value="Summon the table">複數液晶比較(同一張圖)
-    </form>
+    </form> -->
     <h2>Other tools</h2>
-    <a href="/submit/form">Submit Vender Data</a>
+    <a href="checklist_sheet.html">Submit Vender Data</a>
+    <h2>Web Structure</h2>
+    <img src="./img/MVC Express.png" alt="web struct">
+    <h2>To do</h2>
+    <ol>
+        <li>Upload file</li>
+    </ol>
+    <form action="upload_summary_zip", method="POST" enctype="multipart/form-data">
+        <input type="file" name="zip upload">
+        <input type="submit">
+    </form>
 </body>
