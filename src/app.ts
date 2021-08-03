@@ -135,7 +135,8 @@ const uploadMedia = (req: Request, res: Response, next: NextFunction) => {
         // iterate through each file path and extract them
         filesInfo.forEach(({ filePath, fileName }) => {
             // create directory with timestamp to prevent overwrite same directory names
-            const destDir = `${path.join(extractDir, fileName)}_${new Date().getTime()}`;
+            // const destDir = `${path.join(extractDir, fileName)}_${new Date().getTime()}`;
+            const destDir = path.join(extractDir, 'raw');
 
             // pass deleteSource = true if source file not needed after extraction
             extractZip(filePath, destDir, false);
@@ -149,20 +150,31 @@ const uploadMedia = (req: Request, res: Response, next: NextFunction) => {
         const fileExt = path.extname(file.name);
         // create files with timestamp to prevent overwrite same file names
         res.locals.file_name = `${fileName}_${new Date().getTime()}${fileExt}`
+        // res.locals.file_name = `raw`
         file.path = path.join(uploadDir, res.locals.file_name);
     });
-    next();
 }
 const calculate_summary = (req: Request, res: Response, next: NextFunction) => {
-    console.log("path:" + res.locals.file_name)
+    let options = {
+        mode: "text",
+        scriptPath: './python_scripts',
+        args: [
+            "test path"
+        ]
+    } as Options
+    PythonShell.run('calculate_summary.py', options, (err, output) => {
+        if (err) {
+            res.send(err)
+        } else {
+            res.send(output)
+        }
+    })
 }
 
-let r1 = express.Router()
-r1.post('/upload', uploadMedia);
+app.post('/upload', uploadMedia);
 let r2 = express.Router()
-r2.post('/upload', calculate_summary)
 
-app.use([r1, r2])
+app.get('/calculate_summary', calculate_summary)
 
 app.listen(port, () => {
     if (port === 3000) {
