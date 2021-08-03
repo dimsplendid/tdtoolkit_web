@@ -81,12 +81,20 @@
     <a href="checklist_sheet.html">Submit Vender Data</a>
     <h2>Web Structure</h2>
     <img src="./img/MVC Express.png" alt="web struct">
-    <h2>To do</h2>
-    <ol>
-        <li>Upload file</li>
-    </ol>
-    <form action="upload_summary_zip", method="POST" enctype="multipart/form-data">
-        <input type="file" name="zipfile">
-        <input type="submit" value="upload summary zip">
-    </form>
+    <h2>TR 2 summary table</h2>
+    
+    <table>
+        <tr>
+            <td>
+                upload file
+            </td>
+            <td>
+                <form action="upload", method="POST" enctype="multipart/form-data">
+                    <input type="file" name="zipfile">
+                    <input type="submit" value="upload summary zip">
+                </form>
+            </td>
+        </tr>
+    </table>
+    
 </body>

@@ -3,3 +3,5 @@ node_modules/*
 ~*
 src/*.js
 tmp/*
+src/app/*
+src/uploads/*
