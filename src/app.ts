@@ -154,12 +154,29 @@ const uploadMedia = (req: Request, res: Response, next: NextFunction) => {
         file.path = path.join(uploadDir, res.locals.file_name);
     });
 }
-const calculate_summary = (req: Request, res: Response, next: NextFunction) => {
+const update_db = (req: Request, res: Response, next: NextFunction) => {
     let options = {
         mode: "text",
         scriptPath: './python_scripts',
         args: [
             "test path"
+        ]
+    } as Options
+    PythonShell.run('update_db.py', options, (err, output) => {
+        if (err) {
+            res.send(err)
+        } else {
+            res.send(output)
+        }
+    })
+}
+
+const calculate_summary = (req: Request, res: Response, next: NextFunction) => {
+    let options = {
+        mode: "text",
+        scriptPath: './python_scripts',
+        args: [
+            req.query.batch,
         ]
     } as Options
     PythonShell.run('calculate_summary.py', options, (err, output) => {
@@ -172,8 +189,8 @@ const calculate_summary = (req: Request, res: Response, next: NextFunction) => {
 }
 
 app.post('/upload', uploadMedia);
-let r2 = express.Router()
 
+app.get('/update_db', update_db)
 app.get('/calculate_summary', calculate_summary)
 
 app.listen(port, () => {

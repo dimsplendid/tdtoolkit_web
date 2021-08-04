@@ -9,7 +9,21 @@
 </head>
 
 <body>
-    <h1> Search Box </h1>
+    <h2>TR 2 summary table</h2>
+        <form action="upload" , method="POST" enctype="multipart/form-data">
+            <input type="file" name="zipfile">
+            <input type="submit" value="upload summary zip">
+        </form>
+        <form action="update_db">
+            if upload sucess, 
+            <input type="submit" value="update database">
+        </form>
+        <form action="calculate_summary">
+            batch no:
+            <input value="RD11006008" name="batch">
+            <input type="submit" value="calculate">
+        </form>
+    <h2> Search Box </h2>
     <!-- <form action="query">
         <p> DEMO: save the select LC cell gap </p>
         <select name="LC" multiple size="3" value="MOX-1">
@@ -82,15 +96,5 @@
         <a href="checklist_sheet.html">Submit Vender Data</a>
         <h2>Web Structure</h2>
         <img src="./img/MVC Express.png" alt="web struct">
-        <h2>TR 2 summary table</h2>
-
-
-        <form action="upload" , method="POST" enctype="multipart/form-data">
-            <input type="file" name="zipfile">
-            <input type="submit" value="upload summary zip">
-        </form>
-        <form action="upload" , method="POST" enctype="multipart/form-data">
-            <input type="file" name="zipfile">
-            <input type="submit" value="upload summary zip">
-        </form>
+        
 </body>
