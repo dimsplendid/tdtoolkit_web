@@ -59,7 +59,8 @@ app.get('/query/total_table', (req, res) => {
         if (err) {
             res.send(err)
         } else {
-            res.send(output)
+            let file_name = output[2] // need modified later
+            res.download(file_name)
         }
     })
 })

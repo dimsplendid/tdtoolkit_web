@@ -18,13 +18,13 @@ params_str = {
 #     "cell_gap_upper": "3.0,3.0",
 # }
 
-engine = sql.create_engine('sqlite:///./database/demo2.db', echo=False)
+engine = sql.create_engine('sqlite:///./database/test.db', echo=False)
 
 params = {}
 for k, v in params_str.items():
     params[k] = v.split(",")
 
-print(os.getcwd())
+# print(os.getcwd())
 
 result_df = pd.DataFrame()
 # output = './public/tmp/'
@@ -38,6 +38,6 @@ for i in range(len(params["LC"])):
 
 result_df.to_excel(file_name + '.xlsx')
 
-print(params)
-print("file save in ", file_name + ".xlsx")
-print('python finished')
+# print(params)
+print(file_name + ".xlsx")
+# print('python finished')

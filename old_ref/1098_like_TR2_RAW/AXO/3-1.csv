@@ -1,0 +1,126 @@
+[Panel Mapper]
+Version="Version 3.3.0"
+Date="2/18/2021 9:41:28 AM"
+[Measurement Information]
+Scan Start Time=3696456543.2
+Scan Completion Time=3696456907.4
+Recipe No=149
+Manual Measurement=TRUE
+GlassID=[Empty]
+Operator ID=05842
+Scan Start Time String="2/18/2021 9:29:03 AM"
+Scan Completion Time String="2/18/2021 9:35:07 AM"
+[LCD Measurement Settings]
+Number to Average at Each Point=16
+List of WLs=589.0
+Tilt rotation angles.<size(s)>=10
+Tilt rotation angles 0=0.0,-40.0
+Tilt rotation angles 1=0.0,-20.0
+Tilt rotation angles 2=0.0,0.0
+Tilt rotation angles 3=0.0,20.0
+Tilt rotation angles 4=0.0,40.0
+Tilt rotation angles 5=90.0,40.0
+Tilt rotation angles 6=90.0,20.0
+Tilt rotation angles 7=90.0,0.0
+Tilt rotation angles 8=90.0,-20.0
+Tilt rotation angles 9=90.0,-40.0
+[LCD Data]
+Chip No.,x (mm),y (mm),cell gap (um),top R/D (°),twist (°),top pre-tilt (°),bottom pre-tilt (°),Rms (%),Iterations
+1.000000,67.000000,64.000000,2.969070,-89.911571,-0.193736,2.458347,2.183576,0.366798,85.000000
+1.000000,67.000000,75.000000,2.976440,-89.938632,-0.151647,2.477465,2.166810,0.362636,79.000000
+1.000000,67.000000,86.000000,2.957607,-89.925821,-0.180960,2.507229,2.218182,0.361210,85.000000
+1.000000,76.000000,64.000000,2.994011,-89.940132,-0.159454,2.488883,2.153046,0.387539,97.000000
+1.000000,76.000000,75.000000,3.002749,-89.979208,-0.087739,2.489716,2.184576,0.362587,85.000000
+1.000000,76.000000,86.000000,2.992299,-89.984797,-0.091300,2.502478,2.161434,0.366679,75.000000
+[LCD Data End]
+[LCD Stats]
+Parameters,cell gap (um),top R/D (°),twist (°),top pre-tilt (°),bottom pre-tilt (°)
+Average,2.982030,-89.946693,-0.144139,2.487353,2.177937
+Standard Deviation,0.017169,0.029279,0.044899,0.017725,0.023286
+Maximum Value,3.002749,-89.911571,-0.087739,2.507229,2.218182
+Minimum Value,2.957607,-89.984797,-0.193736,2.458347,2.153046
+Range (Max-Min),0.045142,0.073225,0.105997,0.048882,0.065136
+[LCD Stats End]
+[General]
+Panel Mapper=""
+LCDView=""
+Sample Information=""
+[Fitting Parameters]
+Max Iterations=400
+Target Tolerance=0.0001000000
+[Simulation Parameters]
+Layer Count Type=0
+Number of Layers=50
+[Refractive Index]
+NoA=1.4819000000
+NoB=0.0000000000
+NoC=0.0000000000
+NeA=1.5848000000
+NeB=0.0000000000
+NeC=0.0000000000
+[Initial LCD Parameters]
+Corrected Rubbing Direction=-89.925735
+Cell Gap=2.9899165076
+Rubbing Direction=-89.9257346595
+Twist Angle=-0.2702506334
+Front Pre-Tilt=2.5323023621
+Back Pre-Tilt=2.0886120405
+CellGapInclude=TRUE
+RubDirInclude=TRUE
+TwistInclude=TRUE
+FrontTiltInclude=TRUE
+RearTiltInclude=TRUE
+Pretilt coupling=0
+[Vision]
+Angle=0.000000
+OffsetX=0.000000
+OffsetY=0.000000
+Panel Size=0.000000
+Coordinates=0
+[Cplate cluster]
+first Cplate Rth=0.00000000
+Second Cplate Rth=0.00000000
+Navg=1.50000000
+Dn=0.01000000
+Side=Color Filter Facing Up
+[Elastic Continuum Thry]
+Use ECT=FALSE
+K11=0.00000000
+K22=0.00000000
+K33=0.00000000
+Use File=FALSE
+Director File=""
+[Data Point Rejection]
+Remove zero vals=FALSE
+Threshold=0.00000000
+[CG correction]
+Aux A=1.00000000
+Aux B=0.00000000
+[MVA Options]
+Use MVA Fitting=FALSE
+Percentage PT=0.00000000
+zones=<size(s)=0>
+Use Fresnel=FALSE
+correction A=0.00000000
+correction B=0.00000000
+correction C=0.00000000
+[Cell Gap Limits]
+Max Value=0.00000000
+Min Value=0.00000000
+Check CG=FALSE
+[RD Limits]
+Max Value=0.00000000
+Min Value=0.00000000
+Check RD=FALSE
+[Twist Limits]
+Max Value=0.00000000
+Min Value=0.00000000
+Check Twist=FALSE
+[FPT Limits]
+Max Value=0.00000000
+Min Value=0.00000000
+Check FPT=FALSE
+[BPT Limits]
+Max Value=0.00000000
+Min Value=0.00000000
+Check BPT=FALSE

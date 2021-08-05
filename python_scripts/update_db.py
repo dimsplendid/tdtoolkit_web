@@ -45,7 +45,7 @@ def axo_load(path, cond=pd.DataFrame()):
             location_6 = loc * len(short_id)
             # Todo: more error format handling
             
-            tmp_df = pd.read_csv(file, engine="python", skiprows=27, skipfooter=92)
+            tmp_df = pd.read_csv(file, engine="python", skiprows=27, skipfooter=92).iloc[:,:10]
             tmp_df.insert(loc = 1, column = "short-id", value=short_id_6)
             tmp_df.insert(loc = 2, column = "point", value = location_6)
             df = pd.concat([df, tmp_df], ignore_index=True)
