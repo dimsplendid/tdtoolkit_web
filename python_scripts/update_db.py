@@ -3,6 +3,7 @@ import pandas as pd
 import sqlalchemy as sql
 from sqlalchemy.sql.schema import Column
 from sqlalchemy.sql.sqltypes import String
+import shutil
 
 # print("file path:", os.getcwd()) # root should in ./tdtoolkit_web
 raw_root = os.path.join('.','src','app', 'raw')
@@ -223,18 +224,19 @@ ref = ref_load(path["ref"])
 engine = sql.create_engine('sqlite:///database/test.db', echo=False)
 # engine = sql.create_engine('sqlite://', echo=True)
 
-meta = sql.MetaData()
-# Model 是否要分出去?
-sql.Table(
-    "cond", meta,
-    sql.Column("LC", sql.String),
-    sql.Column("Short-id", sql.String),
-    sql.Column("ID", sql.String, unique=True),
-    sql.Column("Project", sql.String),
-    sql.Column("Batch", sql.String)
-)
+# Would occur strange ID conflic(although not duplicate), need check
+# meta = sql.MetaData()
+# # Model 是否要分出去?
+# sql.Table(
+#     "cond", meta,
+#     sql.Column("LC", sql.String),
+#     sql.Column("Short-id", sql.String),
+#     sql.Column("ID", sql.String, unique=True),
+#     sql.Column("Project", sql.String),
+#     sql.Column("Batch", sql.String)
+# )
 
-meta.create_all(engine)
+# meta.create_all(engine)
 
 ## check constrain
 try:
@@ -245,6 +247,7 @@ try:
     rt.to_sql("rt", con=engine, if_exists="append", index=False)
     prop.to_sql("prop", con=engine, if_exists="append", index=False)
     ref.to_sql("ref", con=engine, if_exists="append", index=False)
+    shutil.rmtree(raw_root)
     print("Database update!")
 except:
     print("Something wrong, maybe the ID condition is duplicate. Database keep")
