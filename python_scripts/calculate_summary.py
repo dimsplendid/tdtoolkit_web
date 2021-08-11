@@ -247,9 +247,9 @@ for LC in cond["LC"].unique():
 
 # Generate table
 summary_table = pd.DataFrame(
-    columns=["LC", "V90", "V95", "V99", "Vmax", "Vop(V)", "Δnd(nm)", "Gap(um)", "LC%", "Wx", "Wx_gain", "Wy", "Wy_gain",
+    columns=["Batch", "LC", "V90", "V95", "V99", "Vmax", "Vop(V)", "Δnd(nm)", "Gap(um)", "LC%", "Wx", "Wx_gain", "Wy", "Wy_gain",
              "u'", "v'", "Δ(u', v')", "a*", "b*", "L*", "Δa*", "Δb*", "ΔL*", "ΔEab*", "CR", "ΔCR(%)", "T%", "Scatter", "D", "W", 
-             "Tr(ms)", "Tf(ms)", "RT(ms)", "G2G(ms)"]
+             "Tr(ms)", "Tf(ms)", "RT(ms)", "G2G(ms)", "remark"]
 )
 # cell gap range
 # +- 0.5 um, precise to 0.1 um
@@ -274,6 +274,14 @@ ref_CR = ref["CR"][0]
 ref_CR_index = ref_CR / (model["opt"][ref_LC]["T%_LR"].predict(X)[0]/float(prop[prop["LC"] == ref_LC]["Scatter index"])/ref["cell gap(um)"][0])
         
 for LC in cond["LC"].unique():
+    # cell gap
+    if len(axo) != 0:
+        max_cell_gap = axo[axo["LC"] == LC]["cell gap"].max()
+        min_cell_gap = axo[axo["LC"] == LC]["cell gap"].min()        
+    else:
+        max_cell_gap = rdl[rdl["LC"] == LC]["cell gap"].max()
+        min_cell_gap = rdl[rdl["LC"] == LC]["cell gap"].min() 
+
     ne = float(prop[prop["LC"] == LC]["n_e"])
     no = float(prop[prop["LC"] == LC]["n_o"])
     scatter_index = float(prop[prop["LC"] == LC]["Scatter index"])
@@ -379,6 +387,10 @@ for LC in cond["LC"].unique():
         summary_table.loc[((summary_table["LC"] == LC) & (summary_table["Gap(um)"] == cell_gap)), "CR"] = CR
         summary_table.loc[((summary_table["LC"] == LC) & (summary_table["Gap(um)"] == cell_gap)), "ΔCR(%)"] = (CR-ref_CR)/ref_CR * 100
         
+        remark = "Interpolation" if ((max_cell_gap > cell_gap) & (min_cell_gap < cell_gap)) else "Extrapolation"
+        summary_table.loc[((summary_table["LC"] == LC) & (summary_table["Gap(um)"] == cell_gap)), "remark"] = remark
+        
+        summary_table.loc[((summary_table["LC"] == LC) & (summary_table["Gap(um)"] == cell_gap)), "Batch"] = batch
 
 summary_table.to_sql("summary", con=engine, if_exists="append", index=False)
 print("calculate complete")
