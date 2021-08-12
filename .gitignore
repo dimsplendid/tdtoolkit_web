@@ -5,3 +5,4 @@ src/*.js
 tmp/*
 src/app/*
 src/uploads/*
+img/*

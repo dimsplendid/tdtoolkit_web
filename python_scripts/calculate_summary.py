@@ -25,6 +25,80 @@ rt = pd.read_sql(f"SELECT * FROM rt WHERE batch == \"{batch}\"", engine)
 prop = pd.read_sql(f"SELECT * FROM prop", engine)
 ref = pd.read_sql(f"SELECT * FROM ref WHERE batch == \"{batch}\"", engine)
 
+# remove all files in ./img
+folder = './img/'
+for filename in os.listdir(folder):
+    file_path = os.path.join(folder, filename)
+    try:
+        if os.path.isfile(file_path) or os.path.islink(file_path):
+            os.unlink(file_path)
+        elif os.path.isdir(file_path):
+            shutil.rmtree(file_path)
+    except Exception as e:
+        print('Failed to delete %s. Reason: %s' % (file_path, e))
+
+# plot aux function
+def tex_scientific(number, precise=2):
+    result = f'{number:.{precise}e}'.split('e')
+    if int(result[1]) == 0:
+        return result[0]
+    else:
+        result = result[0] + '\\times 10^{' + str(int(result[1])) + '}'
+        return result
+    
+def tex_math_str(coef, var, precise=2, scientific=False):
+    if len(coef) != (len(var) + 1):
+        print('coeff should have one more feature than var')
+        return 'error len'
+    if scientific == True:
+        result = '$' + tex_scientific(coef[0], precise)
+        for i in range(len(var)):
+            item = tex_scientific(coef[i+1], precise) + var[i]
+            if coef[1+i] < 0:
+                result += item
+            else:
+                result += (' + ' + item)
+    else:
+        result = '$' + str(np.round(coef[0],precise))
+        for i in range(len(var)):
+            if np.round(coef[1+i],precise) == 0:
+                continue
+            item = str(np.round(coef[1+i],precise)) + var[i]
+            if coef[1+i] < 0:
+                result += item
+            else:
+                result += (' + ' + item)
+    result += '$'
+    return result
+
+def aux_plot(data, LC, xyz, model, var_names, precise=2, scientific=False):
+    xlabel = xyz[0]
+    ylabel = xyz[1]
+    zlabel = xyz[2]
+    coeff = model.steps[2][1].coef_
+    X = data[[xlabel, ylabel]].to_numpy()
+    y = data[zlabel].to_numpy()
+    R2_score = model.score(X,y)
+    plt.figure(figsize=(10,8))
+    ax = plt.axes(projection="3d")
+    ax.scatter(data[xlabel], data[ylabel], data[zlabel], label='data')
+    # fitting
+    x_range = np.linspace(data[xlabel].min(), data[xlabel].max(), 50)
+    y_range = np.linspace(data[ylabel].min(), data[ylabel].max(), 50)
+    x_range, y_range = np.meshgrid(x_range, y_range)
+    predict_region = np.array(list(zip(x_range.flatten(), y_range.flatten())))
+    z_predict = model.predict(predict_region)
+    ax.scatter(x_range, y_range, z_predict, label="fitting surface", alpha=0.1)
+    formula = tex_math_str(coeff, var_names, precise, scientific)
+    plt.title(LC + f"\n${zlabel}=$".replace('%', '\%') + formula + f"\n$R^2={R2_score:.2f}$", loc='left')
+    plt.legend()
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.set_zlabel(zlabel)
+    file_name = f'img/{LC}_{zlabel}({xlabel}, {ylabel})_R2_{R2_score:.2f}.png'
+    plt.savefig(file_name)
+#     plt.show()
+
 # RT part
 
 # print("ref:", ref["cell gap(um)"])
@@ -52,11 +126,10 @@ else:
 df = rt_cell_gap[rt_cell_gap["LC"] == ref_LC].copy()
 df["Tr"] = df["Rise-mean (10-90)"]
 df["Vop"] = df["Target Vpk"]
-
+plot_raw = df.copy()
 df = df.groupby(by=["ID", "Vop", "Point"], as_index=False).mean()
 
-# sns.scatterplot(data=df, x="Vop", y="Tr")
-
+# store all model in this dictionary
 model = {}
 # Let's try some fasion ML (XD
 training_set, test_set = train_test_split(
@@ -80,10 +153,22 @@ model["Vop_ref_LR"] = Pipeline([
     X_train, y_train,
 )
 
-# print("R2_train:", model["Vop_ref_LR"].score(X_train, y_train))
-# print("R2_test:", model["Vop_ref_LR"].score(X_test, y_test))
+# plot
+aux_plot(
+    plot_raw, ref_LC, ["Tr", "cell gap", "Vop"], 
+    model["Vop_ref_LR"], 
+    [
+        '\\tilde{{T}}_{{rise}}', 
+        '\\tilde{{d}}_{{cell}}', 
+        '\\tilde{{T}}^2_{{rise}}', 
+        '\\tilde{{T}}_{{rise}}\cdot\\tilde{{d}}_{{cell}}', 
+        '\\tilde{{d}}_{{cell}}^2'
+    ]
+)
+
 ref_Vop = float(model["Vop_ref_LR"].predict(valid_data))
-# print("Vop from Ref[Tr, cell gap]:", ref_Vop)
+
+
 
 # Calculate RT, Tf, Tr
 df = rt_cell_gap.copy()
@@ -91,6 +176,7 @@ df["Vop"] = df["Target Vpk"]
 df["RT"] = df["Rise-mean (10-90)"] + df["Fall-mean (10-90)"]
 df["Tr"] = df["Rise-mean (10-90)"]
 df["Tf"] = df["Fall-mean (10-90)"]
+plot_raws = df.copy()
 training_set, test_set = train_test_split(
     df,
     test_size = 0.1,
@@ -99,11 +185,11 @@ training_set, test_set = train_test_split(
 model["rt"] = {}
 
 for LC in cond["LC"].unique():
-    # print(LC)
     model["rt"][LC] = {}
     X_train = training_set[training_set["LC"]==LC][["Vop", "cell gap"]].to_numpy()
     X_test = test_set[test_set["LC"]==LC][["Vop", "cell gap"]].to_numpy()
     valid_data = [[ref_Vop, ref_cell_gap]]
+    plot_raw = plot_raws[plot_raws["LC"]==LC]
     
     for item in ["Tr", "Tf", "RT"]:
         y_train = training_set[training_set["LC"]==LC][item].to_numpy()
@@ -117,10 +203,17 @@ for LC in cond["LC"].unique():
         ]).fit(
             X_train, y_train,
         )
-        # print(f'R2_test {model["rt"][LC][f"{item}_LR"].score(X_test, y_test):.2f}')
-        # ans = float(model["rt"][LC][f"{item}_LR"].predict(valid_data))
-        # print(f"{LC}: {item}: {ans:.2f} ms")
-        # print()
+        # plot
+        aux_plot(
+            plot_raw, LC, ["Vop", "cell gap", item], 
+            model["rt"][LC][f"{item}_LR"], 
+            [
+                '\\tilde{{V}}_{{op}}', 
+                '\\tilde{{d}}_{{cell}}', 
+                '\\tilde{{V}}_{{op}}\cdot\\tilde{{d}}_{{cell}}', 
+                '\\tilde{{V}}_{{op}}^2'
+            ]
+        )
 
 # OPT Part
 
@@ -153,19 +246,11 @@ def Vop_features_extract(X):
     return features
 transformer_Vop = FunctionTransformer(Vop_features_extract)
 
-# make a cut off at max T% of opt data
-opt_cutoff = pd.DataFrame(columns=opt.columns)
-for ID in opt.ID.unique():
-    for Point in opt.Point.unique():
-        tmp_df = opt[(opt.ID == ID) & (opt.Point == Point)]
-        tmp_df = tmp_df.iloc[:tmp_df["LCM_Y%"].argmax(),:]
-        opt_cutoff = pd.concat([opt_cutoff, tmp_df])
-
 # check is there axo data
 if len(axo) != 0:
-    opt_cell_gap = pd.merge(opt_cutoff, axo[["ID", "Point", "cell gap"]], how="left", on=["ID", "Point"])
+    opt_cell_gap = pd.merge(opt, axo[["ID", "Point", "cell gap"]], how="left", on=["ID", "Point"])
 else:
-    opt_cell_gap = pd.merge(opt_cutoff, rdl[["ID", "cell gap"]], how="left", on="ID")
+    opt_cell_gap = pd.merge(opt, rdl[["ID", "cell gap"]], how="left", on="ID")
 
 model["opt"] = {}
 df = opt_cell_gap.copy()
@@ -177,6 +262,7 @@ df["Wx"] = df["W_x"]
 df["Wy"] = df["W_y"]
 # the varient is large when Vop is low, so I cut-off at Vop = 2
 df = df[df["Vop"] > 3]
+plot_raws = df.copy()
 training_set, test_set = train_test_split(
     df,
     test_size = 0.2,
@@ -188,12 +274,14 @@ for LC in cond["LC"].unique():
     X_train = training_set[training_set["LC"]==LC][["Vop", "cell gap"]].to_numpy()
     X_test = test_set[test_set["LC"]==LC][["Vop", "cell gap"]].to_numpy()
     valid_data = [[ref_Vop, ref_cell_gap]]
+    plot_raw = plot_raws[plot_raws["LC"]==LC]
+
     for item in ["T%", "LC%"]:
         y_train = training_set[training_set["LC"]==LC][item].to_numpy()
         y_test = test_set[test_set["LC"]==LC][item].to_numpy()
         model["opt"][LC][f'{item}_LR'] = Pipeline([
             ('Scalar', StandardScaler()),
-#             ('poly', PolynomialFeatures(degree=3)),
+#             ('poly', PolynomialFeatures(degree=2)),
             ('Custom_Transformer', transformer_opt),
             ('linear', linear_model.TheilSenRegressor(fit_intercept=False)),
 #             ('linear', linear_model.LinearRegression(fit_intercept=False)),
@@ -201,10 +289,20 @@ for LC in cond["LC"].unique():
         ]).fit(
             X_train, y_train,
         )
-        # print(f'R2_test {model["opt"][LC][f"{item}_LR"].score(X_test, y_test):.2f}')
-        # ans = float(model["opt"][LC][f"{item}_LR"].predict(valid_data))
-        # print(f"{LC}: {item}: {ans:.4f}")
-        # print()
+        # plot
+        aux_plot(
+            plot_raw, LC, ["Vop", "cell gap", item], 
+            model["opt"][LC][f'{item}_LR'], 
+            [
+                '\\tilde{{V}}_{{op}}', 
+                '\\tilde{{d}}_{{cell}}', 
+                '\\tilde{{d}}_{{cell}}^2', 
+                '\\tilde{{V}}_{{op}}\cdot\\tilde{{d}}_{{cell}}', 
+                '\\tilde{{V}}_{{op}}^2',
+                '\\tilde{{V}}_{{op}}^3',
+                '\\tilde{{V}}_{{op}}^4'
+            ]
+        )
     for item in ["Wx", "Wy", "WX", "WY", "WZ"]:
         y_train = training_set[training_set["LC"]==LC][item].to_numpy()
         y_test = test_set[test_set["LC"]==LC][item].to_numpy()
@@ -216,22 +314,43 @@ for LC in cond["LC"].unique():
         ]).fit(
             X_train, y_train,
         )
-        # print(f'R2_test {model["opt"][LC][f"{item}_LR"].score(X_test, y_test):.2f}')
-        # ans = float(model["opt"][LC][f"{item}_LR"].predict(valid_data))
-        # print(f"{LC}: {item}: {ans:.4f}")
-        # print()
+        aux_plot(
+            plot_raw, LC, ["Vop", "cell gap", item], 
+            model["opt"][LC][f'{item}_LR'], 
+            [
+                '\\tilde{{V}}_{{op}}', 
+                '\\tilde{{d}}_{{cell}}', 
+                '\\tilde{{V}}_{{op}}^2', 
+                '\\tilde{{V}}_{{op}}\cdot\\tilde{{d}}_{{cell}}', 
+                '\\tilde{{d}}_{{cell}}^2'
+            ],
+            precise=4
+        )
 
 # find V%
 # f(T%, cell_gap) -> V%
+
+# make a cut off opt data
+opt_cutoff = pd.DataFrame(columns=opt.columns)
+for ID in df.ID.unique():
+    for Point in df.Point.unique():
+        tmp_df = df[(df.ID == ID) & (df.Point == Point)]
+        tmp_df = tmp_df.iloc[:tmp_df["LCM_Y%"].argmax(),:]
+        opt_cutoff = pd.concat([opt_cutoff, tmp_df])
+opt_cutoff = opt_cutoff[opt_cutoff["T%"] > 85]
+training_set, test_set = train_test_split(
+    opt_cutoff,
+    test_size = 0.2,
+#     random_state = 42
+)
 valid_data = [[90.0, ref_cell_gap]]
-training_set_Vop = training_set[training_set["T%"]>89]
-test_set_Vop = test_set[test_set["T%"]>89]
 
 for LC in cond["LC"].unique():
-    X_train = training_set_Vop[training_set_Vop["LC"]==LC][["T%", "cell gap"]].to_numpy()
-    X_test = test_set_Vop[test_set_Vop["LC"]==LC][["T%", "cell gap"]].to_numpy()
-    y_train = training_set_Vop[training_set_Vop["LC"]==LC]["Vop"].to_numpy()
-    y_test = test_set_Vop[test_set_Vop["LC"]==LC]["Vop"].to_numpy()
+    X_train = training_set[training_set["LC"]==LC][["T%", "cell gap"]].to_numpy()
+    X_test = test_set[test_set["LC"]==LC][["T%", "cell gap"]].to_numpy()
+    y_train = training_set[training_set["LC"]==LC]["Vop"].to_numpy()
+    y_test = test_set[test_set["LC"]==LC]["Vop"].to_numpy()
+    plot_raw = opt_cutoff[opt_cutoff["LC"]==LC]
     model["opt"][LC][f'Vop_LR'] = Pipeline([
         ('Scalar', StandardScaler()),
 #         ('poly', PolynomialFeatures(degree=6)),
@@ -241,10 +360,16 @@ for LC in cond["LC"].unique():
     ]).fit(
         X_train, y_train,
     )
-    # print(f'R2_test {model["opt"][LC][f"Vop_LR"].score(X_test, y_test):.2f}')
-    # ans = float(model["opt"][LC][f"Vop_LR"].predict(valid_data))
-    # print(f"{LC}: Vop: {ans:.4f}")
-    # print()
+    aux_plot(
+        plot_raw, LC, ["T%", "cell gap", "Vop"], 
+        model["opt"][LC][f'Vop_LR'], 
+        [
+            '\\tilde{{d}}_{{cell}}', 
+            '\\exp(\\tilde{{T}}\%+10)',
+        ],
+        precise=1,
+        scientific=True
+    )
 
 # Generate table
 summary_table = pd.DataFrame(
@@ -394,4 +519,10 @@ for LC in cond["LC"].unique():
         summary_table.loc[((summary_table["LC"] == LC) & (summary_table["Gap(um)"] == cell_gap)), "Batch"] = batch
 
 summary_table.to_sql("summary", con=engine, if_exists="append", index=False)
-print("calculate complete")
+
+# zip ./img for download
+time_stamp = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
+rnd_file_code = f"{np.random.randint(0, 10000):04d}"
+img_name = f'./tmp/{batch}_{time_stamp}-{rnd_file_code}'
+shutil.make_archive(img_name, 'zip', './img')
+print(img_name + '.zip')

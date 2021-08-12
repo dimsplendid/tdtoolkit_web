@@ -184,7 +184,8 @@ const calculate_summary = (req: Request, res: Response, next: NextFunction) => {
         if (err) {
             res.send(err)
         } else {
-            res.send(output)
+            let file_name = output[output?.length - 1] // need modified later
+            res.download(file_name)
         }
     })
 }
