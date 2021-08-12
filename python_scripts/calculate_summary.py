@@ -1,5 +1,4 @@
-import sys
-import os
+import sys, os, shutil
 import numpy as np
 import pandas as pd
 import sqlalchemy as sql
@@ -8,6 +7,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures, FunctionTransformer
 from sklearn.pipeline import Pipeline
 from sklearn import linear_model
+import matplotlib.pyplot as plt
+import time
 # from xgboost import XGBRegressor
 
 batch = sys.argv[1]

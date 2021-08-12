@@ -197,6 +197,6 @@ app.get('/calculate_summary', calculate_summary)
 app.listen(port, () => {
     if (port === 3000) {
         console.log('true')
-    }
+    } 
     console.log(`server is listening on ${port} !!!`);
 });
