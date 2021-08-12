@@ -15,11 +15,6 @@ body {
     text-align: left;
 }
 
-table, th, td {
-    border: 2px solid black;
-    border-collapse: collapse;
-}
-
 #dir {
     padding-top: 1rem;
     padding-right: 2rem;
@@ -115,5 +110,6 @@ main.col-9 div {
     /* negative fixed header height */
 }
 .notes {
-    color: white;
+    color: rgba(255, 255, 255, 0.774);
+    font-size: 12px;
 }

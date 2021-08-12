@@ -38,20 +38,17 @@
 </head>
 
 <body data-spy="scroll" data-target="#myScrollspy" data-offset="80">
-    <header class="navbar navbar-expand bg-dark navbar-dark fixed-top">
-        <a class="navbar-brand mr-0 mr-md-2" href="#" aria-label="TD">
+    <nav class="navbar navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand">
             <span class="fas fa-tools"></span> TD Toolkits
         </a>
-        <div class="navbar-nav-scroll">
-            <ul class="navbar-nav bd-navbar-nav flex-row">
-                <li class="nav-item"><a class="nav-link" href="#">TR2 tools</a></li>
-            </ul>
+        <div class="mr-sm-2 notes">
+            有問題請洽曾煒翔(550-23477)
         </div>
-        <div class="notes">有問題請洽曾煒翔(550-23477)</div>
-    </header>
+    </nav>
     <div class="container-fluid">
         <div class="row">
-            <nav class="col-3 col-lg-2" id="myScrollspy">
+            <!-- <nav class="col-3 col-lg-2" id="myScrollspy">
                 <ul class="nav nav-pills flex-column">
                     <li class="nav-item">
                         <a class="nav-link active" href="#section1">Upload & Caculate</a>
@@ -59,7 +56,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#section2">Search</a>
                     </li>
-                    <!-- <li class="nav-item">
+                    <li class="nav-item">
                         <a class="nav-link" href="#section3">Section 3</a>
                     </li>
                     <li class="nav-item dropdown">
@@ -72,25 +69,159 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Section ...</a>
                     </li>
-                </ul> -->
-            </nav>
+                </ul>
+            </nav> -->
             <main class="col-9 col-lg-10" role="main" style="margin-top: 80px;">
-                <div id="section1">
-                    <h2>Upload data & Caculate</h2>
+                <div class="form-group" id="upload-calculate">
+                    <h5>Upload data & Caculate</h5>
                     <form action="upload" , method="POST" enctype="multipart/form-data">
                         <input type="file" name="zipfile">
-                        <input type="submit" value="upload [raw].zip">
+                        <input class="btn btn-secondary" type="submit" value="upload zip">
                     </form>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
                 </div>
-                <div id="section2">
-                    <h2> Search </h2>
-                    <form action="query/total_table">
-                        <table>
+                <div id="query-table">
+                    <h5> Search </h5>
+                    <!-- <form action="query/total_table">
+                        <div class="form-row">
+                            <div class="col">
+                                <input class="form-control" type="text" placeholder="LC" list="LCs" name=LC>
+                                <datalist id="LCs">
+                                    <option>LCT-19-580</option>
+                                    <option>MOX-1</option>
+                                    <option>LCT-15-1098</option>
+                                    <option>SLC19V33L00</option>
+                                    <option>SLC20V87L00</option>
+                                    <option>AV369-031-TA</option>
+                                    <option>ZIX-7054XX</option>
+                                </datalist>
+                            </div>
+                            <div class="col">
+                                <input class="form-control" type="number" placeholder="max cell gap" step="0.1"
+                                    name="cell_gap_upper">
+                            </div>
+                            <div class="col">
+                                <input class="form-control" type="number" placeholder="min cell gap" step="0.1"
+                                    name="cell_gap_lower">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <input class="form-control" type="text" placeholder="LC" list="LCs" name=LC>
+                                <datalist id="LCs">
+                                    <option>LCT-19-580</option>
+                                    <option>MOX-1</option>
+                                    <option>LCT-15-1098</option>
+                                    <option>SLC19V33L00</option>
+                                    <option>SLC20V87L00</option>
+                                    <option>AV369-031-TA</option>
+                                    <option>ZIX-7054XX</option>
+                                </datalist>
+                            </div>
+                            <div class="col">
+                                <input class="form-control" type="number" placeholder="max cell gap" step="0.1"
+                                    name="cell_gap_upper">
+                            </div>
+                            <div class="col">
+                                <input class="form-control" type="number" placeholder="min cell gap" step="0.1"
+                                    name="cell_gap_lower">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <input class="form-control" type="text" placeholder="LC" list="LCs" name=LC>
+                                <datalist id="LCs">
+                                    <option>LCT-19-580</option>
+                                    <option>MOX-1</option>
+                                    <option>LCT-15-1098</option>
+                                    <option>SLC19V33L00</option>
+                                    <option>SLC20V87L00</option>
+                                    <option>AV369-031-TA</option>
+                                    <option>ZIX-7054XX</option>
+                                </datalist>
+                            </div>
+                            <div class="col">
+                                <input class="form-control" type="number" placeholder="max cell gap" step="0.1"
+                                    name="cell_gap_upper">
+                            </div>
+                            <div class="col">
+                                <input class="form-control" type="number" placeholder="min cell gap" step="0.1"
+                                    name="cell_gap_lower">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <input class="form-control" type="text" placeholder="LC" list="LCs" name=LC>
+                                <datalist id="LCs">
+                                    <option>LCT-19-580</option>
+                                    <option>MOX-1</option>
+                                    <option>LCT-15-1098</option>
+                                    <option>SLC19V33L00</option>
+                                    <option>SLC20V87L00</option>
+                                    <option>AV369-031-TA</option>
+                                    <option>ZIX-7054XX</option>
+                                </datalist>
+                            </div>
+                            <div class="col">
+                                <input class="form-control" type="number" placeholder="max cell gap" step="0.1"
+                                    name="cell_gap_upper">
+                            </div>
+                            <div class="col">
+                                <input class="form-control" type="number" placeholder="min cell gap" step="0.1"
+                                    name="cell_gap_lower">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <input class="form-control" type="text" placeholder="LC" list="LCs" name=LC>
+                                <datalist id="LCs">
+                                    <option>LCT-19-580</option>
+                                    <option>MOX-1</option>
+                                    <option>LCT-15-1098</option>
+                                    <option>SLC19V33L00</option>
+                                    <option>SLC20V87L00</option>
+                                    <option>AV369-031-TA</option>
+                                    <option>ZIX-7054XX</option>
+                                </datalist>
+                            </div>
+                            <div class="col">
+                                <input class="form-control" type="number" placeholder="max cell gap" step="0.1"
+                                    name="cell_gap_upper">
+                            </div>
+                            <div class="col">
+                                <input class="form-control" type="number" placeholder="min cell gap" step="0.1"
+                                    name="cell_gap_lower">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <input class="form-control" type="text" placeholder="LC" list="LCs" name=LC>
+                                <datalist id="LCs">
+                                    <option>LCT-19-580</option>
+                                    <option>MOX-1</option>
+                                    <option>LCT-15-1098</option>
+                                    <option>SLC19V33L00</option>
+                                    <option>SLC20V87L00</option>
+                                    <option>AV369-031-TA</option>
+                                    <option>ZIX-7054XX</option>
+                                </datalist>
+                            </div>
+                            <div class="col">
+                                <input class="form-control" type="number" placeholder="max cell gap" step="0.1"
+                                    name="cell_gap_upper">
+                            </div>
+                            <div class="col">
+                                <input class="form-control" type="number" placeholder="min cell gap" step="0.1"
+                                    name="cell_gap_lower">
+                            </div>
+                        </div>
+                        <div class="form row">
+                            <div class="col">
+                                <input class="btn btn-secondary" type="submit" value="Summon the Table">
+                            </div>
+                        </div>
+                    </form> -->
+                    <form clas action="query/total_table">
+                        <table class="table-sm table-striped table-hover">
                             <thead>
                                 <tr>
                                     <th>LC</th>
@@ -123,7 +254,7 @@
                                 <tr>
                                     <td>
                                         <input type="text" list="LCs" name=LC>
-                                        <datalist id="LCs">
+                                        <!-- <datalist id="LCs">
                                             <option>LCT-19-580</option>
                                             <option>MOX-1</option>
                                             <option>LCT-15-1098</option>
@@ -131,7 +262,7 @@
                                             <option>SLC20V87L00</option>
                                             <option>AV369-031-TA</option>
                                             <option>ZIX-7054XX</option>
-                                        </datalist>
+                                        </datalist> -->
                                     </td>
                                     <td>
                                         <input type="number" step="0.1" name="cell_gap_upper" value="4.0">
@@ -143,7 +274,7 @@
                                 <tr>
                                     <td>
                                         <input type="text" list="LCs" name=LC>
-                                        <datalist id="LCs">
+                                        <!-- <datalist id="LCs">
                                             <option>LCT-19-580</option>
                                             <option>MOX-1</option>
                                             <option>LCT-15-1098</option>
@@ -151,7 +282,7 @@
                                             <option>SLC20V87L00</option>
                                             <option>AV369-031-TA</option>
                                             <option>ZIX-7054XX</option>
-                                        </datalist>
+                                        </datalist> -->
                                     </td>
                                     <td>
                                         <input type="number" step="0.1" name="cell_gap_upper" value="4.0">
@@ -163,7 +294,7 @@
                                 <tr>
                                     <td>
                                         <input type="text" list="LCs" name=LC>
-                                        <datalist id="LCs">
+                                        <!-- <datalist id="LCs">
                                             <option>LCT-19-580</option>
                                             <option>MOX-1</option>
                                             <option>LCT-15-1098</option>
@@ -171,7 +302,7 @@
                                             <option>SLC20V87L00</option>
                                             <option>AV369-031-TA</option>
                                             <option>ZIX-7054XX</option>
-                                        </datalist>
+                                        </datalist> -->
                                     </td>
                                     <td>
                                         <input type="number" step="0.1" name="cell_gap_upper" value="4.0">
@@ -183,7 +314,7 @@
                                 <tr>
                                     <td>
                                         <input type="text" list="LCs" name=LC>
-                                        <datalist id="LCs">
+                                        <!-- <datalist id="LCs">
                                             <option>LCT-19-580</option>
                                             <option>MOX-1</option>
                                             <option>LCT-15-1098</option>
@@ -191,7 +322,7 @@
                                             <option>SLC20V87L00</option>
                                             <option>AV369-031-TA</option>
                                             <option>ZIX-7054XX</option>
-                                        </datalist>
+                                        </datalist> -->
                                     </td>
                                     <td>
                                         <input type="number" step="0.1" name="cell_gap_upper" value="4.0">
@@ -203,7 +334,7 @@
                                 <tr>
                                     <td>
                                         <input type="text" list="LCs" name=LC>
-                                        <datalist id="LCs">
+                                        <!-- <datalist id="LCs">
                                             <option>LCT-19-580</option>
                                             <option>MOX-1</option>
                                             <option>LCT-15-1098</option>
@@ -211,67 +342,7 @@
                                             <option>SLC20V87L00</option>
                                             <option>AV369-031-TA</option>
                                             <option>ZIX-7054XX</option>
-                                        </datalist>
-                                    </td>
-                                    <td>
-                                        <input type="number" step="0.1" name="cell_gap_upper" value="4.0">
-                                    </td>
-                                    <td>
-                                        <input type="number" step="0.1" name="cell_gap_lower" value="2.0">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="text" list="LCs" name=LC>
-                                        <datalist id="LCs">
-                                            <option>LCT-19-580</option>
-                                            <option>MOX-1</option>
-                                            <option>LCT-15-1098</option>
-                                            <option>SLC19V33L00</option>
-                                            <option>SLC20V87L00</option>
-                                            <option>AV369-031-TA</option>
-                                            <option>ZIX-7054XX</option>
-                                        </datalist>
-                                    </td>
-                                    <td>
-                                        <input type="number" step="0.1" name="cell_gap_upper" value="4.0">
-                                    </td>
-                                    <td>
-                                        <input type="number" step="0.1" name="cell_gap_lower" value="2.0">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="text" list="LCs" name=LC>
-                                        <datalist id="LCs">
-                                            <option>LCT-19-580</option>
-                                            <option>MOX-1</option>
-                                            <option>LCT-15-1098</option>
-                                            <option>SLC19V33L00</option>
-                                            <option>SLC20V87L00</option>
-                                            <option>AV369-031-TA</option>
-                                            <option>ZIX-7054XX</option>
-                                        </datalist>
-                                    </td>
-                                    <td>
-                                        <input type="number" step="0.1" name="cell_gap_upper" value="4.0">
-                                    </td>
-                                    <td>
-                                        <input type="number" step="0.1" name="cell_gap_lower" value="2.0">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="text" list="LCs" name=LC>
-                                        <datalist id="LCs">
-                                            <option>LCT-19-580</option>
-                                            <option>MOX-1</option>
-                                            <option>LCT-15-1098</option>
-                                            <option>SLC19V33L00</option>
-                                            <option>SLC20V87L00</option>
-                                            <option>AV369-031-TA</option>
-                                            <option>ZIX-7054XX</option>
-                                        </datalist>
+                                        </datalist> -->
                                     </td>
                                     <td>
                                         <input type="number" step="0.1" name="cell_gap_upper" value="4.0">
@@ -282,23 +353,9 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <input type="submit" value="Summon the table">
+                        <input class="btn btn-secondary" type="submit" value="Summon the Table">
                     </form>
-                    <!-- For last page extend content, it should have some better methods -->
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
                 </div>
-
             </main>
         </div>
     </div>
