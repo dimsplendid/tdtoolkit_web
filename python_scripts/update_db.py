@@ -249,5 +249,6 @@ try:
     ref.to_sql("ref", con=engine, if_exists="append", index=False)
     shutil.rmtree(raw_root)
     print("Database update!")
+    print(cond.Batch[0])
 except:
     print("Something wrong, maybe the ID condition is duplicate. Database keep")

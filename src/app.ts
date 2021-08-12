@@ -131,7 +131,7 @@ const uploadMedia = (req: Request, res: Response, next: NextFunction) => {
         // if uploaded files are not zip files, return error
         if (!validFiles) return res.status(400).json({ message: "unsupported file type" });
 
-        res.status(200).json({ uploaded: true });
+        // res.status(200).json({ uploaded: true });
 
         // iterate through each file path and extract them
         filesInfo.forEach(({ filePath, fileName }) => {
@@ -154,6 +154,7 @@ const uploadMedia = (req: Request, res: Response, next: NextFunction) => {
         // res.locals.file_name = `raw`
         file.path = path.join(uploadDir, res.locals.file_name);
     });
+    next();
 }
 const update_db = (req: Request, res: Response, next: NextFunction) => {
     let options = {
@@ -167,7 +168,9 @@ const update_db = (req: Request, res: Response, next: NextFunction) => {
         if (err) {
             res.send(err)
         } else {
-            res.send(output)
+            // res.send(output[output?.length - 1])
+            req.batch = output[output?.length - 1]
+            next()
         }
     })
 }
@@ -177,7 +180,8 @@ const calculate_summary = (req: Request, res: Response, next: NextFunction) => {
         mode: "text",
         scriptPath: './python_scripts',
         args: [
-            req.query.batch,
+            // req.query.batch,
+            req.batch
         ]
     } as Options
     PythonShell.run('calculate_summary.py', options, (err, output) => {
@@ -190,7 +194,7 @@ const calculate_summary = (req: Request, res: Response, next: NextFunction) => {
     })
 }
 
-app.post('/upload', uploadMedia);
+app.post('/upload', uploadMedia, update_db, calculate_summary);
 
 app.get('/update_db', update_db)
 app.get('/calculate_summary', calculate_summary)
