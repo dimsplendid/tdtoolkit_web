@@ -1,4 +1,5 @@
 import sys, os, shutil
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import sqlalchemy as sql
@@ -27,6 +28,7 @@ ref = pd.read_sql(f"SELECT * FROM ref WHERE batch == \"{batch}\"", engine)
 
 # remove all files in ./img
 folder = './img/'
+Path("./img").mkdir(parents=True, exist_ok=True)
 for filename in os.listdir(folder):
     file_path = os.path.join(folder, filename)
     try:
@@ -296,7 +298,7 @@ for LC in cond["LC"].unique():
             [
                 '\\tilde{{V}}_{{op}}', 
                 '\\tilde{{d}}_{{cell}}', 
-                '\\tilde{{d}}_{{cell}}^2', 
+                # '\\tilde{{d}}_{{cell}}^2', 
                 '\\tilde{{V}}_{{op}}\cdot\\tilde{{d}}_{{cell}}', 
                 '\\tilde{{V}}_{{op}}^2',
                 '\\tilde{{V}}_{{op}}^3',
