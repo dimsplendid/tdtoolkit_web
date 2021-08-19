@@ -77,14 +77,15 @@ const uploadMedia = (req: Request, res: Response, next: NextFunction) => {
         // if uploaded files are not zip files, return error
         if (!validFiles) return res.status(400).json({ message: "unsupported file type" });
 
-        // res.status(200).json({ uploaded: true });
+        res.status(200).json({ uploaded: true });
 
         // iterate through each file path and extract them
         filesInfo.forEach(({ filePath, fileName }) => {
             // create directory with timestamp to prevent overwrite same directory names
             // const destDir = `${path.join(extractDir, fileName)}_${new Date().getTime()}`;
             const destDir = path.join(extractDir, 'raw');
-
+            console.log(filePath)
+            console.log(`${path.join(extractDir, fileName)}_${new Date().getTime()}`)
             // pass deleteSource = true if source file not needed after extraction
             extractZip(filePath, destDir, false);
         });
@@ -100,7 +101,7 @@ const uploadMedia = (req: Request, res: Response, next: NextFunction) => {
         // res.locals.file_name = `raw`
         file.path = path.join(uploadDir, res.locals.file_name);
     });
-    next();
+    // next();
 }
 
 const update_db = (req: Request, res: Response, next: NextFunction) => {
