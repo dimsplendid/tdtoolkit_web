@@ -1,78 +1,18 @@
 import path from 'path'
+import fs from 'fs'
+import extract from 'extract-zip'
+import formidable from 'formidable'
 import express from 'express'
 import {Request, Response, NextFunction} from 'express'
 import { PythonShell, Options } from 'python-shell'
 
-import fs from 'fs'
-import extract from 'extract-zip'
-import formidable from 'formidable'
+const router = express.Router()
 
 const uploadDir = path.join(__dirname, '/uploads/');
-const extractDir = path.join(__dirname, '/app/');
+const extractDir = path.join(__dirname, '/extract_files/');
 
-const app = express();
-const port = 3000;
-
-// middleware static
-// make the root alias (../public -> /)
-app.use(express.static(path.join(__dirname, '..', 'public')))
-
-app.get('/plot/VT', (req, res) => {
-    let options = {
-        mode: "text",
-        scriptPath: './python_scripts',
-        args: [
-            req.query.LC,
-            req.query.cell_gap,
-            req.query.V_max,
-            req.query.V_min
-        ]
-    } as Options
-    PythonShell.run('draw_VT.py', options, (err, output) => {
-        if (err) {
-            res.send(err)
-        } else {
-            res.send(output)
-        }
-    })
-})
-
-// for insert vender measuring data
-// Something weird here, need figure out later
-// the action in "/submit/form" would just in "/submit/*" ? 
-
-app.get('/submit/VHR', (req, res) => {
-    res.send(req.query)
-})
-app.get('/query/total_table', (req, res) => {
-    console.log(req.query)
-    let options = {
-        mode: "text",
-        scriptPath: './python_scripts',
-        args: [
-            req.query.LC,
-            req.query.cell_gap_lower,
-            req.query.cell_gap_upper,
-        ]
-    } as Options
-    PythonShell.run('query_total_table.py', options, (err, output) => {
-        if (err) {
-            res.send(err)
-        } else {
-            let file_name = output[output?.length - 1] // need modified later
-            res.download(file_name)
-        }
-    })
-})
-
-// these should separate at other files later
 // copy and modified from https://gist.github.com/dev-drprasad/8f46ddd8ffea7ba8f883e577d3ce0005
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir);
-}
-if (!fs.existsSync(extractDir)) {
-    fs.mkdirSync(extractDir);
-}
+
 
 const extractZip = (file, destination, deleteSource) => {
     extract(file, { dir: destination }, (err) => {
@@ -101,6 +41,12 @@ const nestedExtract = (dir, zipExtractor) => {
 // there should be a better way to get file name
 
 const uploadMedia = (req: Request, res: Response, next: NextFunction) => {
+    if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir);
+    }
+    if (!fs.existsSync(extractDir)) {
+        fs.mkdirSync(extractDir);
+    }
     const form = new formidable.IncomingForm();
     // file size limit 100MB. change according to your needs
     form.maxFileSize = 100 * 1024 * 1024;
@@ -156,6 +102,7 @@ const uploadMedia = (req: Request, res: Response, next: NextFunction) => {
     });
     next();
 }
+
 const update_db = (req: Request, res: Response, next: NextFunction) => {
     let options = {
         mode: "text",
@@ -194,14 +141,6 @@ const calculate_summary = (req: Request, res: Response, next: NextFunction) => {
     })
 }
 
-app.post('/upload', uploadMedia, update_db, calculate_summary);
+router.post('/upload', uploadMedia, update_db, calculate_summary);
 
-app.get('/update_db', update_db)
-app.get('/calculate_summary', calculate_summary)
-
-app.listen(port, () => {
-    if (port === 3000) {
-        console.log('true')
-    } 
-    console.log(`server is listening on ${port} !!!`);
-});
+export {router as tr2Calculator}
