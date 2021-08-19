@@ -7,3 +7,6 @@ routes/app/*
 routes/uploads/*
 img/*
 *.js
+routes/extract_files/*
+routes/uploads/*
+database/test.db

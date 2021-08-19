@@ -12,7 +12,7 @@ const uploadDir = path.join(__dirname, '/uploads/');
 const extractDir = path.join(__dirname, '/extract_files/');
 
 // copy and modified from https://gist.github.com/dev-drprasad/8f46ddd8ffea7ba8f883e577d3ce0005
-
+// need modifed, cause I shouldn't need recursive un-archive.
 
 const extractZip = (file, destination, deleteSource) => {
     extract(file, { dir: destination }, (err) => {
