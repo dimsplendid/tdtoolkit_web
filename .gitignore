@@ -1,8 +1,9 @@
 node_modules/*
 .*
 ~*
-src/*.js
+routes/*.js
 tmp/*
-src/app/*
-src/uploads/*
+routes/app/*
+routes/uploads/*
 img/*
+*.js

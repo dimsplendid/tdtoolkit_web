@@ -6,7 +6,7 @@ from sqlalchemy.sql.sqltypes import String
 import shutil
 
 # print("file path:", os.getcwd()) # root should in ./tdtoolkit_web
-raw_root = os.path.join('.','src','app', 'raw')
+raw_root = os.path.join('.','routes','extract_files', 'raw')
 
 path = {
     "axo": os.path.join(raw_root, "AXO"),
