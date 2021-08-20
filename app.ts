@@ -8,6 +8,9 @@ import {tr2Calculator} from './routes/tr2Calculator'
 // template router
 import {templateRouter} from './routes/template'
 
+// test
+import {uploadZip} from './routes/extract'
+
 const app = express();
 const port = 3000;
 
@@ -24,7 +27,8 @@ app.use(queryTotalTable)
 // TR2 calculator
 app.use(tr2Calculator)
 
-
+// test new upload function
+app.post('/test', uploadZip)
 
 app.listen(port, () => {
     if (port === 3000) {
