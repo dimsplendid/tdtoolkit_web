@@ -46,13 +46,13 @@ function uploadZip(req: Request, res: Response, next: NextFunction) {
         }
 
         // no file uploads
-        // if (files.name === undefined) {
-        //     return res.status(400).json({
-        //         status: "Fail",
-        //         message: "No file uploaded",
-        //         error: err
-        //     })
-        // }
+        if (files.name === undefined) {
+            return res.status(400).json({
+                status: "Fail",
+                message: "No file uploaded",
+                error: err
+            })
+        }
         // check whether uploaded file is zip
         else if (!(path.extname((files.name).toString()) === 'zip')) {
             return res.status(400).json({

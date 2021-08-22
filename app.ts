@@ -30,6 +30,9 @@ app.use(tr2Calculator)
 // test new upload function
 app.post('/test', uploadZip)
 
+// catch all errors
+app.use()
+
 app.listen(port, () => {
     if (port === 3000) {
         console.log('true')
