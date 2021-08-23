@@ -31,7 +31,7 @@ app.use(tr2Calculator)
 app.post('/test', uploadZip)
 
 // catch all errors
-app.use()
+// app.use()
 
 app.listen(port, () => {
     if (port === 3000) {

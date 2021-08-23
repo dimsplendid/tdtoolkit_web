@@ -1,7 +1,7 @@
 import path from 'path'
 import extrac from 'extract-zip'
 import { Options } from 'extract-zip'
-import { Request, Response, NextFunction } from 'express'
+import { Request, Response, NextFunction, request } from 'express'
 import fs from 'fs'
 import { fstat } from 'fs';
 import formidable from 'formidable'
@@ -15,6 +15,13 @@ function extractZip(file: string, destination: string, deleteSource: boolean) {
             if (deleteSource) fs.unlinkSync(file)
         })
         .catch(err => console.log(err))
+}
+
+// adding needed attributes to Request
+declare module "express-serve-static-core" {
+    interface Request {
+        fileName?: String
+    }
 }
 
 // upload zip file, and pass the un-archived folder to next middleware
@@ -44,31 +51,59 @@ function uploadZip(req: Request, res: Response, next: NextFunction) {
                 error: err,
             })
         }
-
-        // no file uploads
-        if (files.name === undefined) {
+        
+        // file upload detect
+        if (Object.keys(files).length === 0) {
             return res.status(400).json({
                 status: "Fail",
-                message: "No file uploaded",
-                error: err
-            })
-        }
-        // check whether uploaded file is zip
-        else if (!(path.extname((files.name).toString()) === 'zip')) {
-            return res.status(400).json({
-                status: "Fail",
-                message: "Unsupported file type",
-                error: err
+                message: "no files uploaded",
+                error: err,
             })
         }
 
+        // res.send(files.name) // this would never end, interesting
+        
+        res.send(req.fileName)
+
+        // // no file uploads
+        // if (files.name === undefined) {
+        //     return res.status(400).json({
+        //         status: "Fail",
+        //         message: "No file uploaded",
+        //         error: err
+        //     })
+        // }
+        // // check whether uploaded file is zip
+        // else if (!(path.extname((files.name).toString()) === 'zip')) {
+        //     return res.status(400).json({
+        //         status: "Fail",
+        //         message: "Unsupported file type",
+        //         error: err
+        //     })
+        // }
     })
-    form.on('end', () => {
-        res.status(200).json({
-            status: "Success",
-            message: "upload success"
-        })
+    // form.on('end', () => {
+    //     res.status(200).json({
+    //         status: "Success",
+    //         message: "upload success"
+    //     })
+    // })
+
+    form.on('file', (name, file) => {
+        if (file.name === null) {
+            return res.status(400).json({
+                status: "Fail",
+                message: "Something wrong",
+            })
+        } else if (file.name === "") {
+            return res.status(400).json({
+                status: "Fail",
+                message: "No file",
+            })
+        }
+        req.fileName = path.basename(file.name, path.extname(file.name))
     })
+    // next()
 }
 
 export { uploadZip }
