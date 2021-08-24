@@ -10,3 +10,4 @@ img/*
 routes/extract_files/*
 routes/uploads/*
 database/test.db
+public/uploads/*

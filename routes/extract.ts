@@ -5,10 +5,12 @@ import { Request, Response, NextFunction, request } from 'express'
 import fs from 'fs'
 import { fstat } from 'fs';
 import formidable from 'formidable'
+import { constants } from 'buffer'
 
 const uploadDir = path.join(__dirname, '../public/uploads/');
 const extractDir = path.join(__dirname, '../public/extract_files/');
 
+// extractZip
 function extractZip(file: string, destination: string, deleteSource: boolean) {
     extrac(file, { dir: destination })
         .then(state => {
@@ -20,7 +22,7 @@ function extractZip(file: string, destination: string, deleteSource: boolean) {
 // adding needed attributes to Request
 declare module "express-serve-static-core" {
     interface Request {
-        fileName?: String
+        fileName?: string
     }
 }
 
@@ -45,49 +47,22 @@ function uploadZip(req: Request, res: Response, next: NextFunction) {
         console.log(files)
         if (err) {
             console.log("Error parsing the files");
-            return res.status(400).json({
-                status: "Fail",
-                message: "There was an error parsing the files",
-                error: err,
-            })
+            next(err)
         }
-        
-        // file upload detect
-        if (Object.keys(files).length === 0) {
-            return res.status(400).json({
-                status: "Fail",
-                message: "no files uploaded",
-                error: err,
-            })
-        }
-
-        // res.send(files.name) // this would never end, interesting
-        
+    
         res.send(req.fileName)
 
-        // // no file uploads
-        // if (files.name === undefined) {
-        //     return res.status(400).json({
-        //         status: "Fail",
-        //         message: "No file uploaded",
-        //         error: err
-        //     })
-        // }
-        // // check whether uploaded file is zip
-        // else if (!(path.extname((files.name).toString()) === 'zip')) {
-        //     return res.status(400).json({
-        //         status: "Fail",
-        //         message: "Unsupported file type",
-        //         error: err
-        //     })
-        // }
+        // extract to target directory
     })
-    // form.on('end', () => {
-    //     res.status(200).json({
-    //         status: "Success",
-    //         message: "upload success"
-    //     })
-    // })
+    form.on('fileBegin', (name, file) => {
+        if (file.name !== null && file.name !== "") {
+            // Generate a time stamp zip to prevent duplicate upload files
+            const fileName = path.basename(file.name, path.extname(file.name))
+            const fileExt = path.extname(file.name)
+            req.fileName = `${fileName}_${new Date().getTime()}${fileExt}`
+            file.path = path.join(uploadDir, req.fileName)
+        }
+    })
 
     form.on('file', (name, file) => {
         if (file.name === null) {
@@ -96,14 +71,25 @@ function uploadZip(req: Request, res: Response, next: NextFunction) {
                 message: "Something wrong",
             })
         } else if (file.name === "") {
+            // delete the 'empty' file
+            fs.unlink(file.path, (err) => {
+                if (err) {
+                    console.log(err)
+                    throw err
+                }
+            })
             return res.status(400).json({
                 status: "Fail",
                 message: "No file",
             })
         }
-        req.fileName = path.basename(file.name, path.extname(file.name))
     })
     // next()
+}
+
+function test_print(req: Request, res: Response, next: NextFunction) {
+
+    
 }
 
 export { uploadZip }

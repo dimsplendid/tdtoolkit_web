@@ -3,7 +3,7 @@ import fs from 'fs'
 import extract from 'extract-zip'
 import formidable from 'formidable'
 import express from 'express'
-import {Request, Response, NextFunction} from 'express'
+import { Request, Response, NextFunction } from 'express'
 import { PythonShell, Options } from 'python-shell'
 
 const router = express.Router()
@@ -144,4 +144,4 @@ const calculate_summary = (req: Request, res: Response, next: NextFunction) => {
 
 router.post('/upload', uploadMedia, update_db, calculate_summary);
 
-export {router as tr2Calculator}
+export { router as tr2Calculator }
