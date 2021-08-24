@@ -15,7 +15,13 @@ declare module "express-serve-static-core" {
     }
 }
 
-// upload zip file, and pass the un-archived folder to next middleware
+/**
+ * Pass the upload zip file with proper name to next middle ware
+ * file path is save to req.filePath
+ * @param req 
+ * @param res 
+ * @param next  
+ */
 function uploadZip(req: Request, res: Response, next: NextFunction) {
     if (!fs.existsSync(uploadDir)) {
         fs.mkdirSync(uploadDir)
@@ -37,7 +43,7 @@ function uploadZip(req: Request, res: Response, next: NextFunction) {
         if (err) {
             console.log("Error parsing the files");
             next(err)
-        }    
+        }
         next()
 
         // extract to target directory
@@ -75,8 +81,14 @@ function uploadZip(req: Request, res: Response, next: NextFunction) {
     })
 }
 
-// extractZip
-
+/**
+ * Extract the zip file at req.filePath
+ * and pass the exatract directory path at req.filePath
+ * to next middleware.
+ * @param req 
+ * @param res 
+ * @param next 
+ */
 function extractZip(req: Request, res: Response, next: NextFunction) {
     if (req.filePath === undefined) {
         return res.status(400).json({
@@ -84,7 +96,7 @@ function extractZip(req: Request, res: Response, next: NextFunction) {
             message: "No file path in extractZip",
         })
     }
-    const dest =  path.join(extractDir, path.basename(req.filePath, path.extname(req.filePath)))
+    const dest = path.join(extractDir, path.basename(req.filePath, path.extname(req.filePath)))
     extrac(req.filePath, { dir: dest })
         .then(() => {
             req.filePath = dest

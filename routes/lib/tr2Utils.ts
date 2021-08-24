@@ -9,8 +9,13 @@ declare module "express-serve-static-core" {
     }
 }
 
-// updata_db
-const update_db = (req: Request, res: Response, next: NextFunction) => {
+/**
+ * update data base with TR2 raw data
+ * @param req 
+ * @param res 
+ * @param next 
+ */
+const tr2_update_db = (req: Request, res: Response, next: NextFunction) => {
     let options = {
         mode: "text",
         scriptPath: './python_scripts',
@@ -36,7 +41,12 @@ const update_db = (req: Request, res: Response, next: NextFunction) => {
     })
 }
 
-// calculate_summary
+/**
+ * Calculate TR2 opt data from database
+ * @param req 
+ * @param res 
+ * @param next 
+ */
 const calculate_summary = (req: Request, res: Response, next: NextFunction) => {
     let options = {
         mode: "text",
@@ -47,7 +57,7 @@ const calculate_summary = (req: Request, res: Response, next: NextFunction) => {
     } as Options
     PythonShell.run('calculate_summary.py', options, (err, output) => {
         if (err) {
-            res.send(err)
+            next(err)
         } else if (output) {
             let file_name = output[output?.length - 1] // need modified later
             res.download(file_name)
@@ -60,4 +70,4 @@ const calculate_summary = (req: Request, res: Response, next: NextFunction) => {
     })
 }
 
-export { update_db, calculate_summary }
+export { tr2_update_db, calculate_summary }

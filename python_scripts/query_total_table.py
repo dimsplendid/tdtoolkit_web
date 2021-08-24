@@ -7,9 +7,10 @@ import sqlalchemy as sql
 import os
 
 params_str = {
-    "LC": sys.argv[1],
-    "cell_gap_lower": sys.argv[2],
-    "cell_gap_upper": sys.argv[3],
+    "V%": sys.argv[1],
+    "LC": sys.argv[2],
+    "cell_gap_lower": sys.argv[3],
+    "cell_gap_upper": sys.argv[4],
 }
 # test input
 # params_str = {
@@ -33,7 +34,7 @@ rnd_file_code = f"-{np.random.randint(0, 10000):04d}"
 file_name = output + 'query-' + time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime()) + rnd_file_code
 for i in range(len(params["LC"])):
     print(params['LC'][i])
-    tmp_df = pd.read_sql(f"SELECT * FROM summary WHERE LC == \"{params['LC'][i]}\" AND \"Gap(um)\" > {params['cell_gap_lower'][i]} AND \"Gap(um)\" < {params['cell_gap_upper'][i]}", engine)
+    tmp_df = pd.read_sql(f"SELECT * FROM summary WHERE LC == \"{params['LC'][i]}\" AND \"Gap(um)\" > {params['cell_gap_lower'][i]} AND \"Gap(um)\" < {params['cell_gap_upper'][i]} AND \"V%\" == \'{params['V%'][0]}\'", engine)
     result_df = pd.concat([result_df, tmp_df], ignore_index=True)
 
 result_df.to_excel(file_name + '.xlsx')

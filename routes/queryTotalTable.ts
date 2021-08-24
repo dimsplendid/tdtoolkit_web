@@ -12,6 +12,7 @@ router.get('/query/total_table', (req, res) => {
         mode: "text",
         scriptPath: './python_scripts',
         args: [
+            req.query.Volt_perscent,
             req.query.LC,
             req.query.cell_gap_lower,
             req.query.cell_gap_upper,

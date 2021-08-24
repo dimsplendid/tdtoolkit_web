@@ -9,8 +9,6 @@ import { tr2Calculator } from './routes/tr2Calculator'
 import { templateRouter } from './routes/template'
 
 // test
-import { extractZip, uploadZip } from './routes/lib/zipUtils'
-import { update_db, calculate_summary } from './routes/lib/tr2Utils'
 
 const app = express();
 const port = 3000;
@@ -29,12 +27,6 @@ app.use(queryTotalTable)
 app.use(tr2Calculator)
 
 // test new upload function
-app.post('/test', [
-    uploadZip, 
-    extractZip,
-    update_db,
-    calculate_summary
-])
 
 // uploads files explore?
 
