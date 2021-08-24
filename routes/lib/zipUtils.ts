@@ -1,28 +1,17 @@
 import path from 'path'
 import extrac from 'extract-zip'
-import { Options } from 'extract-zip'
 import { Request, Response, NextFunction, request } from 'express'
 import fs from 'fs'
-import { fstat } from 'fs';
 import formidable from 'formidable'
-import { constants } from 'buffer'
 
-const uploadDir = path.join(__dirname, '../public/uploads/');
-const extractDir = path.join(__dirname, '../public/extract_files/');
-
-// extractZip
-function extractZip(file: string, destination: string, deleteSource: boolean) {
-    extrac(file, { dir: destination })
-        .then(state => {
-            if (deleteSource) fs.unlinkSync(file)
-        })
-        .catch(err => console.log(err))
-}
+// setting upload & extract directory
+const uploadDir = path.join(__dirname, '../../public/uploads/');
+const extractDir = path.join(__dirname, '../../public/extract_files/');
 
 // adding needed attributes to Request
 declare module "express-serve-static-core" {
     interface Request {
-        fileName?: string
+        filePath?: string
     }
 }
 
@@ -48,9 +37,8 @@ function uploadZip(req: Request, res: Response, next: NextFunction) {
         if (err) {
             console.log("Error parsing the files");
             next(err)
-        }
-    
-        res.send(req.fileName)
+        }    
+        next()
 
         // extract to target directory
     })
@@ -59,8 +47,9 @@ function uploadZip(req: Request, res: Response, next: NextFunction) {
             // Generate a time stamp zip to prevent duplicate upload files
             const fileName = path.basename(file.name, path.extname(file.name))
             const fileExt = path.extname(file.name)
-            req.fileName = `${fileName}_${new Date().getTime()}${fileExt}`
-            file.path = path.join(uploadDir, req.fileName)
+            const upload_name = `${fileName}_${new Date().getTime()}${fileExt}`
+            req.filePath = path.join(uploadDir, upload_name)
+            file.path = req.filePath
         }
     })
 
@@ -84,12 +73,24 @@ function uploadZip(req: Request, res: Response, next: NextFunction) {
             })
         }
     })
-    // next()
 }
 
-function test_print(req: Request, res: Response, next: NextFunction) {
+// extractZip
 
-    
+function extractZip(req: Request, res: Response, next: NextFunction) {
+    if (req.filePath === undefined) {
+        return res.status(400).json({
+            status: "Fail",
+            message: "No file path in extractZip",
+        })
+    }
+    const dest =  path.join(extractDir, path.basename(req.filePath, path.extname(req.filePath)))
+    extrac(req.filePath, { dir: dest })
+        .then(() => {
+            req.filePath = dest
+            next()
+        })
+        .catch(err => console.log(err))
 }
 
-export { uploadZip }
+export { uploadZip, extractZip }

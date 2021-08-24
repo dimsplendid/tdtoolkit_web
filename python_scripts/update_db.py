@@ -1,4 +1,5 @@
 import os
+import sys
 import pandas as pd
 import sqlalchemy as sql
 from sqlalchemy.sql.schema import Column
@@ -6,7 +7,8 @@ from sqlalchemy.sql.sqltypes import String
 import shutil
 
 # print("file path:", os.getcwd()) # root should in ./tdtoolkit_web
-raw_root = os.path.join('.','routes','extract_files', 'raw')
+# raw_root = os.path.join('.','routes','extract_files', 'raw')
+raw_root = sys.argv[1]
 
 path = {
     "axo": os.path.join(raw_root, "AXO"),

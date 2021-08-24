@@ -11,3 +11,4 @@ routes/extract_files/*
 routes/uploads/*
 database/test.db
 public/uploads/*
+public/extract_files/*
