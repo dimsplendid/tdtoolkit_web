@@ -443,6 +443,7 @@ for LC in cond["LC"].unique():
             summary_table.locV_target = RT[0]
             summary_table.loc[table_where(LC, cell_gap, v), "Tr(ms)"] = Tr[0]
             summary_table.loc[table_where(LC, cell_gap, v), "Tf(ms)"] = Tf[0]
+            summary_table.loc[table_where(LC, cell_gap, v), "RT(ms)"] = RT[0]
             summary_table.loc[table_where(LC, cell_gap, v), "G2G(ms)"] = ref["G2G(ms)"][0] / ref["RT(ms)"][0] * RT[0]
 
             # opt
