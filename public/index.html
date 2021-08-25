@@ -79,6 +79,7 @@
                         <input class="btn btn-secondary" type="submit" value="Calculate">
                     </form>
                 </div>
+                <hr>
                 <div id="query-table">
                     <h5> Search </h5>
                     <form clas action="query/total_table">
@@ -221,7 +222,16 @@
                             </tbody>
                         </table>
                         <input class="btn btn-secondary" type="submit" value="Summon the Table">
-                    </form>                
+                    </form>
+                </div>
+                <hr>
+                <div class="form-group" id="upload-calculate">
+                    <h5>AXO exporter</h5>
+                    <form action="axo_exporter" , method="POST" enctype="multipart/form-data">
+                        <input type="file" name="zipfile" value="zip" accept=".zip">
+                        rms cut off = 0.3
+                        <input class="btn btn-secondary" type="submit" value="Export">
+                    </form>
                 </div>
             </main>
         </div>

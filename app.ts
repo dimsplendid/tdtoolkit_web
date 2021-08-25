@@ -4,6 +4,7 @@ import express, { Request, Response } from 'express'
 // routers
 import { queryTotalTable } from './routes/queryTotalTable'
 import { tr2Calculator } from './routes/tr2Calculator'
+import {axoExporter} from './routes/axoExporter'
 
 // template router
 import { templateRouter } from './routes/template'
@@ -26,8 +27,12 @@ app.use(queryTotalTable)
 // TR2 calculator
 app.use(tr2Calculator)
 
-// test new upload function
+// Axo tools
+app.use(axoExporter)
 
+// Test area
+
+// TODO
 // uploads files explore?
 
 // catch all errors
