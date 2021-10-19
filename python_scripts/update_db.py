@@ -181,6 +181,8 @@ def cond_load(path):
     ─┬─ folder[path]
      └─ [cond].xlsx
     """
+    print(path)
+    print(os.walk(path))
     file = next(os.walk(path))[2][0]
     df = pd.read_excel(os.path.join(path, file))
     df = df.iloc[:,0:5]

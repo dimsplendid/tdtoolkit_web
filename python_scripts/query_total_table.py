@@ -1,10 +1,12 @@
+from os import write
 import sys
 import time
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import sqlalchemy as sql
-import os
+from openpyxl import load_workbook
+# import os
 
 params_str = {
     "V%": sys.argv[1],
@@ -32,6 +34,7 @@ result_df = pd.DataFrame()
 output = './tmp/'
 rnd_file_code = f"-{np.random.randint(0, 10000):04d}"
 file_name = output + 'query-' + time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime()) + rnd_file_code
+
 for i in range(len(params["LC"])):
 #     print(params['LC'][i])
     tmp_df = pd.read_sql(f"SELECT * FROM summary WHERE LC == \"{params['LC'][i]}\" AND \"Gap(um)\" > {params['cell_gap_lower'][i]} AND \"Gap(um)\" < {params['cell_gap_upper'][i]} AND \"V%\" == \'{params['V%'][0]}\'", engine)
@@ -42,8 +45,20 @@ for i in range(len(params["LC"])):
         tmp_df = tmp_df.merge(tmp_ref, how="left", left_on="Batch", right_on="batch_ref")
     result_df = pd.concat([result_df, tmp_df], ignore_index=True)
 
-result_df.to_excel(file_name + '.xlsx')
+result_df.to_excel(file_name + '.xlsx', sheet_name="opt")
 
+VT_df = pd.DataFrame()
+for i in range(len(params["LC"])):
+#     print(params['LC'][i])
+    tmp_df = pd.read_sql(f"SELECT * FROM VT_CURVE WHERE LC == \"{params['LC'][i]}\" AND \"Gap(um)\" > {params['cell_gap_lower'][i]} AND \"Gap(um)\" < {params['cell_gap_upper'][i]}", engine)
+    VT_df = pd.concat([VT_df, tmp_df], ignore_index=True)
+
+book = load_workbook(file_name + '.xlsx')
+writer = pd.ExcelWriter(file_name + '.xlsx', engine='openpyxl')
+writer.book = book
+VT_df.to_excel(writer, sheet_name="VT_curve")
+writer.save()
+writer.close()
 # print(params)
 print(file_name + ".xlsx")
 # print('python finished')

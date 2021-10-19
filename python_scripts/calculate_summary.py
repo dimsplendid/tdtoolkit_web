@@ -401,6 +401,14 @@ ref_LC = ref["LC"][0]
 ref_CR = ref["CR"][0]
 ref_CR_index = ref_CR / (model["opt"][ref_LC]["T%_LR"].predict(X)[0]/float(prop[prop["LC"] == ref_LC]["Scatter index"])/ref["cell gap(um)"][0])
 
+# VT
+VT_curve = {
+    'LC': [],
+    'Gap(um)': [],
+    'V(volt)': [],
+    'T%': [],
+    'LC%': [],
+}
 # add "this" row function
 # maybe there's a better way?
 def table_where(LC, cell_gap, Vop):
@@ -432,6 +440,20 @@ for LC in cond["LC"].unique():
             "V100": V100[0],
             "Vref": ref_Vop
         }
+
+        # V-T curve
+        VT_V = np.arange(3, 10, 0.1)
+        VT_d = [cell_gap] * len(VT_V)
+        VT_T = model["opt"][LC]["T%_LR"].predict(np.array([VT_V, VT_d]).T)
+        VT_LC = model['opt'][LC]['LC%_LR'].predict(np.array([VT_V, VT_d]).T)
+        VT_curve["LC"] += ([LC] * len(VT_V))
+        VT_curve["Gap(um)"] += list(VT_d)
+        VT_curve["V(volt)"] += list(VT_V)
+        VT_curve["T%"] += list(VT_T)
+        VT_curve["LC%"] += list(VT_LC)
+
+
+        
         for k, v in V_target.items():
             summary_table = summary_table.append({"LC": LC, "Gap(um)": cell_gap, "Vop(V)": v}, ignore_index=True)
             # rt
@@ -539,6 +561,7 @@ for LC in cond["LC"].unique():
             summary_table.loc[table_where(LC, cell_gap, v), "Batch"] = batch
 
 summary_table.to_sql("summary", con=engine, if_exists="append", index=False)
+pd.DataFrame.from_dict(VT_curve).to_sql("VT_CURVE", con=engine, if_exists="append")
 
 # zip ./img for download
 time_stamp = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
